@@ -22,8 +22,8 @@ let the author know what they have to do.
 
 1. Copy `config/config.example.yml` to `config/config.yml`.
 2. Modify the options (GitHub credentials for the commenter, callback
-   URL, users to not comment on, and repositories to watch) in that file
-   to taste.
+   URL, callback secret, users to not comment on, and repositories to watch)
+   in that file to taste.
 3. Push the application to your favourite application hosting service.
 4. Rest easy knowing that Judge Dredd is fighting your legal battles for
    you.
