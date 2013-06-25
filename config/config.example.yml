@@ -3,6 +3,7 @@ credentials:
   token: github-token
 
 callback_url: http://example.com/callback_url
+callback_secret: asdfasdfasdf
 
 allowed_usernames:
   - username

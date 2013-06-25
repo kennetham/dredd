@@ -5,10 +5,13 @@ require 'dredd/hook_bootstrapper'
 
 describe Dredd::HookBootstrapper do
   let(:client) { double('GitHub Client') }
-  let(:bootstrapper) { described_class.new(client, callback_url) }
+  let(:bootstrapper) do
+    described_class.new(client, callback_url, callback_secret)
+  end
 
   let(:repository) { 'xoebus/test' }
   let(:callback_url) { 'http://example.com/cla' }
+  let(:callback_secret) { 'asdfasdfasdf' }
 
   let(:our_hook) do
     Hashie::Mash.new(config: {
@@ -32,7 +35,8 @@ describe Dredd::HookBootstrapper do
         client.should_receive(:create_hook).with(
             repository,
             'web',
-            { url: callback_url, content_type: 'json' },
+            { url: callback_url, secret: callback_secret,
+              content_type: 'json' },
             { events: %w(pull_request), active: true }
         )
 

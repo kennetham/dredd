@@ -3,6 +3,7 @@ credentials:
   token: config-token
 
 callback_url: http://example.com/callback
+callback_secret: asdfasdfasdf
 
 allowed_usernames:
   - allowed-username

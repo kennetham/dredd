@@ -1,8 +1,9 @@
 module Dredd
   class HookBootstrapper
-    def initialize(client, callback_url)
+    def initialize(client, callback_url, callback_secret)
       @client = client
       @callback_url = callback_url
+      @callback_secret = callback_secret
     end
 
     def bootstrap_repository(repository)
@@ -15,7 +16,8 @@ module Dredd
     def create_hook(repository)
       @client.create_hook(
           repository, 'web',
-          { url: @callback_url, content_type: 'json' },
+          { url: @callback_url, secret: @callback_secret,
+              content_type: 'json' },
           { events: %w(pull_request), active: true }
       )
     end

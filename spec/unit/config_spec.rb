@@ -16,6 +16,10 @@ describe Dredd::Config do
         expect(config.callback_url).to eq('http://example.com/callback')
       end
 
+      it 'allows you to read the callback secret' do
+        expect(config.callback_secret).to eq('asdfasdfasdf')
+      end
+
       it 'allows you to read the list of repositories' do
         expect(config.repositories).to eq(
             %w(username/repository

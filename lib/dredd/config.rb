@@ -23,6 +23,10 @@ module Dredd
       @hash.fetch('callback_url')
     end
 
+    def callback_secret
+      @hash.fetch('callback_secret')
+    end
+
     def repositories
       @hash.fetch('repositories')
     end
