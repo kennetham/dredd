@@ -16,7 +16,7 @@ describe Dredd::DreddApp do
   end
 
   before do
-    described_class.set :commenter, commenter
+    app.set :commenter, commenter
   end
 
   describe 'reporting its status' do
@@ -33,9 +33,7 @@ describe Dredd::DreddApp do
 
     it 'tells the commenter to comment' do
       commenter.should_receive(:comment).with('xoebus/dredd', 10, 'xoebus')
-
       post '/', payload
-
       expect(last_response).to be_ok
     end
   end
