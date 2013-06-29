@@ -4,11 +4,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'dredd'
 
 config = Dredd::Config.from_file('config/config.yml')
-TEMPLATE = <<-EOT
-Hey <%= username %>!
-
-Thanks for submitting this pull request!
-EOT
+template = File.read('config/template.md.erb')
 
 github_client = Octokit::Client.new(login: config.username,
     oauth_token: config.token)
@@ -20,7 +16,7 @@ config.repositories.each do |repo|
   bootstrapper.bootstrap_repository(repo)
 end
 
-commenter = Dredd::PullRequestCommenter.new(github_client, TEMPLATE)
+commenter = Dredd::PullRequestCommenter.new(github_client, template)
 filterer = Dredd::UsernameFilterer.new(commenter, config.allowed_usernames)
 
 Dredd::DreddApp.set :commenter, filterer
