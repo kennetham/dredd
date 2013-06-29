@@ -8,9 +8,15 @@ module Dredd
     end
 
     def comment(repository, pull_request_number, username)
+      comment_text = render_comment(username)
+      @client.add_comment(repository, pull_request_number, comment_text)
+    end
+
+    private
+
+    def render_comment(username)
       context = RenderingContext.new(username)
-      comment = @template.result(context.get_binding)
-      @client.add_comment(repository, pull_request_number, comment)
+      @template.result(context.get_binding)
     end
 
     class RenderingContext
