@@ -16,9 +16,10 @@ config.repositories.each do |repo|
   bootstrapper.bootstrap_repository(repo)
 end
 
-email_filter = Dredd::EmailFilter.new(github_client, config.allowed_emails)
-username_filter = Dredd::UsernameFilter.new(config.allowed_usernames)
-composite_filter = Dredd::CompositeFilter.new([email_filter, username_filter])
+composite_filter = Dredd::CompositeFilter.new([
+    Dredd::EmailFilter.new(github_client, config.allowed_emails),
+    Dredd::UsernameFilter.new(config.allowed_usernames)
+])
 
 commenter = Dredd::PullRequestCommenter.new(github_client, template)
 filtered_commenter = Dredd::FilteredCommenter.new(commenter, composite_filter)
