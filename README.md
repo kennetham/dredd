@@ -38,7 +38,8 @@ commenting on pull requests. It needs to be a user that has
 administrative access to the repositories that you wish to monitor in
 order to bootstrap the initial hooks. If you don't want to give Dredd
 administrative access then for the moment just comment out the bootstrap
-code in `config.ru`.
+code in `config.ru` and create the hooks manually though the API (the
+website doesn't give you enough options).
 
 ##### credentials.token
 
