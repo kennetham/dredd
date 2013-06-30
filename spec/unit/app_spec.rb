@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-require 'rack/test'
-
 require 'dredd/app'
 
 set :environment, :test
