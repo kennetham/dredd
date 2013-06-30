@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'integration_spec_helper'
 
 require 'octokit'
 require 'dredd'
