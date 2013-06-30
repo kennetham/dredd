@@ -21,7 +21,7 @@ module Dredd
     end
 
     def email_for_user(username)
-      @client.user(username).email
+      @client.user(username).email || ''
     end
   end
 end
