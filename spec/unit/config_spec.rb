@@ -38,39 +38,30 @@ describe Dredd::Config do
     end
   end
 
+  shared_examples_for 'it has a key which is a durable array' do |key|
+    context "if #{key} is not specified" do
+      it 'returns an empty array for that value' do
+        config_hash.delete(key)
+        expect(config.send(key.to_sym)).to eq []
+      end
+    end
+
+    context "if #{key} is nil (key with no value in YAML)" do
+      it 'returns an empty array for that value' do
+        config_hash[key] = nil
+        expect(config.send(key.to_sym)).to eq []
+      end
+    end
+  end
+
   describe 'reading from a hash' do
     let(:config_hash) { Psych.load(asset_contents('config.yml')) }
     let(:config) { described_class.new(config_hash) }
 
     it_behaves_like 'a configuration file'
 
-    context 'if allowed_emails is not specified' do
-      it 'returns an empty array for that value' do
-        config_hash.delete('allowed_emails')
-        expect(config.allowed_emails).to eq []
-      end
-    end
-
-    context 'if allowed_emails is not specified' do
-      it 'returns an empty array for that value' do
-        config_hash.delete('allowed_usernames')
-        expect(config.allowed_usernames).to eq []
-      end
-    end
-    
-    context 'if allowed_emails is nil (key with no value in YAML)' do
-      it 'returns an empty array for that value' do
-        config_hash['allowed_emails'] = nil
-        expect(config.allowed_emails).to eq []
-      end
-    end
-
-    context 'if allowed_emails is nil (key with no value in YAML)' do
-      it 'returns an empty array for that value' do
-        config_hash['allowed_usernames'] = nil
-        expect(config.allowed_usernames).to eq []
-      end
-    end
+    it_behaves_like 'it has a key which is a durable array', 'allowed_usernames'
+    it_behaves_like 'it has a key which is a durable array', 'allowed_emails'
   end
 
   describe 'reading from a file' do
