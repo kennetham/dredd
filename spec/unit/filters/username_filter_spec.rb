@@ -5,7 +5,7 @@ require 'dredd/filters/username_filter'
 describe Dredd::UsernameFilter do
   let(:filter) { described_class.new(allowed_usernames) }
 
-  let(:author) { Dredd::PullRequestAuthor.new('xoebus') }
+  let(:author) { Dredd::PullRequestAuthor.new('xoebus', 'xoebus@xoeb.us') }
   let(:pull_request) { Dredd::PullRequest.new(1, 'xoebus/dredd', author) }
 
   describe '#filter?' do

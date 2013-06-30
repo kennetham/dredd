@@ -15,7 +15,7 @@ describe 'dredd application lifecycle' do
   end
 
   let(:allowed_usernames) { %w(xoebus) }
-  let(:allowed_emails) { %w(chris@xoeb.us) }
+  let(:allowed_emails) { %w(xoebus@xoeb.us) }
 
   let(:config_hash) do
     {
