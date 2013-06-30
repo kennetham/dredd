@@ -8,6 +8,9 @@ callback_secret: asdfasdfasdf
 allowed_usernames:
   - username
 
+allowed_emails:
+  - email@example.com
+
 repositories:
   - username/repository
   - username/other-repository
