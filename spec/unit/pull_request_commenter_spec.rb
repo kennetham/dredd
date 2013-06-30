@@ -10,8 +10,7 @@ describe Dredd::PullRequestCommenter do
   let(:id) { 55 }
   let(:username) { 'seadowg' }
 
-  let(:author) { Dredd::PullRequestAuthor.new(username) }
-  let(:pull_request) { Dredd::PullRequest.new(id, repository, author) }
+  let(:pull_request) { Dredd::PullRequest.new(id, repository, username) }
 
   describe 'making a comment' do
     it 'makes a comment with a template' do

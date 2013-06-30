@@ -8,7 +8,7 @@ module Dredd
     end
 
     def comment(pull_request)
-      username = pull_request.author_username
+      username = pull_request.author
       id = pull_request.id
       repository = pull_request.repository
 

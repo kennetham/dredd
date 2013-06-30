@@ -7,7 +7,7 @@ module Dredd
     end
 
     def filter?(pull_request)
-      username = pull_request.author_username
+      username = pull_request.author
       @allowed_usernames.include?(username)
     end
   end
