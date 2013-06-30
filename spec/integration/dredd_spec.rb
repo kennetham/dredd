@@ -72,6 +72,10 @@ describe 'dredd application lifecycle' do
   end
 
   def assert_comment_was_made
+    stub_request(
+        :post,
+        'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
+    )
     assert_requested(
         :post,
         'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
