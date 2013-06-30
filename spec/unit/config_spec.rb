@@ -31,6 +31,10 @@ describe Dredd::Config do
       it 'allows you to read the list of allowed usernames' do
         expect(config.allowed_usernames).to eq(%w(allowed-username))
       end
+
+      it 'allows you to read the list of allowed emails' do
+        expect(config.allowed_emails).to eq(%w(allowed-email@example.com))
+      end
     end
   end
 
@@ -39,6 +43,34 @@ describe Dredd::Config do
     let(:config) { described_class.new(config_hash) }
 
     it_behaves_like 'a configuration file'
+
+    context 'if allowed_emails is not specified' do
+      it 'returns an empty array for that value' do
+        config_hash.delete('allowed_emails')
+        expect(config.allowed_emails).to eq []
+      end
+    end
+
+    context 'if allowed_emails is not specified' do
+      it 'returns an empty array for that value' do
+        config_hash.delete('allowed_usernames')
+        expect(config.allowed_usernames).to eq []
+      end
+    end
+    
+    context 'if allowed_emails is nil (key with no value in YAML)' do
+      it 'returns an empty array for that value' do
+        config_hash['allowed_emails'] = nil
+        expect(config.allowed_emails).to eq []
+      end
+    end
+
+    context 'if allowed_emails is nil (key with no value in YAML)' do
+      it 'returns an empty array for that value' do
+        config_hash['allowed_usernames'] = nil
+        expect(config.allowed_usernames).to eq []
+      end
+    end
   end
 
   describe 'reading from a file' do

@@ -12,27 +12,37 @@ module Dredd
     end
 
     def username
-      @hash.fetch('credentials').fetch('username')
+      get('credentials').fetch('username')
     end
 
     def token
-      @hash.fetch('credentials').fetch('token')
+      get('credentials').fetch('token')
     end
 
     def callback_url
-      @hash.fetch('callback_url')
+      get('callback_url')
     end
 
     def callback_secret
-      @hash.fetch('callback_secret')
+      get('callback_secret')
     end
 
     def repositories
-      @hash.fetch('repositories')
+      get('repositories')
     end
 
     def allowed_usernames
-      @hash.fetch('allowed_usernames')
+      get('allowed_usernames', [])
+    end
+
+    def allowed_emails
+      get('allowed_emails', [])
+    end
+
+    private
+
+    def get(key, default=nil)
+      @hash.fetch(key, default) || default
     end
   end
 end
