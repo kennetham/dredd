@@ -17,12 +17,9 @@ module Dredd
     private
 
     def comment(json_hash)
-      commenter = settings.commenter
-      pull_request = json_hash.fetch('pull_request')
-      repo = pull_request.fetch('base').fetch('repo').fetch('full_name')
-      number = pull_request.fetch('number')
-      user = pull_request.fetch('user').fetch('login')
-      commenter.comment(repo, number, user)
+      pull_request_hash = json_hash.fetch('pull_request')
+      pull_request = PullRequest.from_hash(pull_request_hash)
+      commenter.comment(pull_request)
     end
 
     def check_hmac(body)
@@ -32,6 +29,10 @@ module Dredd
       request_hmac = request.env['HTTP_X_HUB_SIGNATURE']
 
       halt 401, 'Not authorized' if hmac != request_hmac
+    end
+
+    def commenter
+      settings.commenter
     end
   end
 end

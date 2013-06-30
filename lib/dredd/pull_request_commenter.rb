@@ -7,9 +7,13 @@ module Dredd
       @template = ERB.new(template)
     end
 
-    def comment(repository, pull_request_number, username)
+    def comment(pull_request)
+      username = pull_request.author_username
+      id = pull_request.id
+      repository = pull_request.repository
+
       comment_text = render_comment(username)
-      @client.add_comment(repository, pull_request_number, comment_text)
+      @client.add_comment(repository, id, comment_text)
     end
 
     private

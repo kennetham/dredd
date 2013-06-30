@@ -1,3 +1,4 @@
+require 'dredd/pull_request'
 require 'dredd/pull_request_commenter'
 
 describe Dredd::PullRequestCommenter do
@@ -6,22 +7,20 @@ describe Dredd::PullRequestCommenter do
   let(:commenter) { described_class.new(client, template) }
 
   let(:repository) { 'xoebus/test-repo' }
-  let(:pull_request_number) { 55 }
+  let(:id) { 55 }
   let(:username) { 'seadowg' }
 
-  describe 'making a comment' do
-    it 'makes a comment' do
-      client.should_receive(:add_comment).with(repository,
-                                               pull_request_number,
-                                               anything)
-      commenter.comment(repository, pull_request_number, username)
-    end
+  let(:author) { Dredd::PullRequestAuthor.new(username) }
+  let(:pull_request) { Dredd::PullRequest.new(id, repository, author) }
 
-    it 'populates a template' do
-      client.should_receive(:add_comment).with(repository,
-                                               pull_request_number,
-                                               'hello seadowg')
-      commenter.comment(repository, pull_request_number, username)
+  describe 'making a comment' do
+    it 'makes a comment with a template' do
+      client.should_receive(:add_comment).with(
+          repository,
+          id,
+          'hello seadowg'
+      )
+      commenter.comment(pull_request)
     end
   end
 end

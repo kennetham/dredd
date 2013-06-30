@@ -51,7 +51,6 @@ describe Dredd::HookBootstrapper do
 
       it 'does not create a new one' do
         client.should_not_receive(:create_hook)
-
         bootstrapper.bootstrap_repository(repository)
       end
     end

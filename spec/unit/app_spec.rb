@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+require 'dredd/pull_request'
 require 'dredd/app'
 
 set :environment, :test
@@ -32,9 +33,11 @@ describe Dredd::DreddApp do
     let(:payload) { asset_contents('pull_request_opened.json') }
     let(:digest) { OpenSSL::Digest::Digest.new('sha1') }
     let(:hmac) { OpenSSL::HMAC.hexdigest(digest, secret, payload) }
+    let(:pull_request) { double(Dredd::PullRequest) }
 
     it 'tells the commenter to comment' do
-      commenter.should_receive(:comment).with('xoebus/dredd', 10, 'xoebus')
+      Dredd::PullRequest.stub(:from_hash) { pull_request }
+      commenter.should_receive(:comment).with(pull_request)
       post '/', payload, 'HTTP_X_HUB_SIGNATURE' => "sha1=#{hmac}"
       expect(last_response).to be_ok
     end

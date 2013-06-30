@@ -14,6 +14,9 @@ describe 'dredd application lifecycle' do
     WebMock.allow_net_connect!
   end
 
+  let(:allowed_usernames) { %w(xoebus) }
+  let(:allowed_emails) { %w(chris@xoeb.us) }
+
   let(:config_hash) do
     {
         'credentials' => {
@@ -35,9 +38,8 @@ describe 'dredd application lifecycle' do
     )
   end
   let(:commenter) { Dredd::PullRequestCommenter.new(github_client, template) }
-  let(:filter) do
-    Dredd::UsernameFilterer.new(commenter, config.allowed_usernames)
-  end
+  let(:filter) { Dredd::UsernameFilter.new(config.allowed_usernames) }
+  let(:filtered_commenter) { Dredd::FilteredCommenter.new(commenter, filter) }
 
   let(:secret) { config.callback_secret }
   let(:payload) { asset_contents('pull_request_opened.json') }
@@ -68,7 +70,7 @@ describe 'dredd application lifecycle' do
 
   describe 'commenting on pull requests' do
     before do
-      app.set :commenter, filter
+      app.set :commenter, filtered_commenter
       app.set :secret, secret
     end
 

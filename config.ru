@@ -16,10 +16,12 @@ config.repositories.each do |repo|
   bootstrapper.bootstrap_repository(repo)
 end
 
-commenter = Dredd::PullRequestCommenter.new(github_client, template)
-filterer = Dredd::UsernameFilterer.new(commenter, config.allowed_usernames)
+username_filter = Dredd::UsernameFilter.new(config.allowed_usernames)
 
-Dredd::DreddApp.set :commenter, filterer
+commenter = Dredd::PullRequestCommenter.new(github_client, template)
+filtered_commenter = Dredd::FilteredCommenter.new(commenter, username_filter)
+
+Dredd::DreddApp.set :commenter, filtered_commenter
 Dredd::DreddApp.set :secret, config.callback_secret
 
 run Dredd::DreddApp
