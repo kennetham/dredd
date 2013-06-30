@@ -41,7 +41,7 @@ module Dredd
 
     private
 
-    def get(key, default=nil)
+    def get(key, default = nil)
       @hash.fetch(key, default) || default
     end
   end

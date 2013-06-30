@@ -60,7 +60,8 @@ describe Dredd::Config do
 
     it_behaves_like 'a configuration file'
 
-    it_behaves_like 'it has a key which is a durable array', 'allowed_usernames'
+    it_behaves_like 'it has a key which is a durable array',
+                    'allowed_usernames'
     it_behaves_like 'it has a key which is a durable array', 'allowed_emails'
   end
 
