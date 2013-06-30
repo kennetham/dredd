@@ -35,7 +35,9 @@ describe 'dredd application lifecycle' do
     )
   end
   let(:commenter) { Dredd::PullRequestCommenter.new(github_client, template) }
-  let(:filter) { Dredd::UsernameFilterer.new(commenter, config.allowed_usernames) }
+  let(:filter) do
+    Dredd::UsernameFilterer.new(commenter, config.allowed_usernames)
+  end
 
   let(:secret) { config.callback_secret }
   let(:payload) { asset_contents('pull_request_opened.json') }
@@ -51,11 +53,17 @@ describe 'dredd application lifecycle' do
   end
 
   def assert_comment_was_not_made
-    assert_not_requested :post, 'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
+    assert_not_requested(
+        :post,
+        'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
+    )
   end
 
   def assert_comment_was_made
-    assert_requested :post, 'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
+    assert_requested(
+        :post,
+        'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
+    )
   end
 
   describe 'commenting on pull requests' do
@@ -64,21 +72,23 @@ describe 'dredd application lifecycle' do
       app.set :secret, secret
     end
 
-    context 'when the user is in the allowed usernames' do
-      let(:allowed_usernames) { %w(xoebus) }
+    describe 'allowed usernames' do
+      context 'when the user is in the allowed usernames' do
+        let(:allowed_usernames) { %w(xoebus) }
 
-      it 'does not make a comment' do
-        github_calls_callback
-        assert_comment_was_not_made
+        it 'does not make a comment' do
+          github_calls_callback
+          assert_comment_was_not_made
+        end
       end
-    end
 
-    context 'when the user is not in the allowed usernames' do
-      let(:allowed_usernames) { %w(seadowg tissarah) }
+      context 'when the user is not in the allowed usernames' do
+        let(:allowed_usernames) { %w(seadowg tissarah) }
 
-      it 'makes a comment' do
-        github_calls_callback
-        assert_comment_was_made
+        it 'makes a comment' do
+          github_calls_callback
+          assert_comment_was_made
+        end
       end
     end
   end
