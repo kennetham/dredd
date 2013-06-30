@@ -23,10 +23,68 @@ let the author know what they have to do.
 1. Copy `config/config.example.yml` to `config/config.yml`.
 2. Modify the options (GitHub credentials for the commenter, callback
    URL, callback secret, users to not comment on, and repositories to watch)
-   in that file to taste.
+   in that file to taste. See the section below for more explanation as
+   to what the different configuration variables are used for.
 3. Push the application to your favourite application hosting service.
 4. Rest easy knowing that Judge Dredd is fighting your legal battles for
    you.
+
+### Configuration Variables
+
+##### credentials.username
+
+This is the GitHub username that you would like Dredd to use when
+commenting on pull requests. It needs to be a user that has
+administrative access to the repositories that you wish to monitor in
+order to bootstrap the initial hooks. If you don't want to give Dredd
+administrative access then for the moment just comment out the bootstrap
+code in `config.ru`.
+
+##### credentials.token
+
+This is the token that Dredd uses in place of a password to authenticate
+with GitHub. You can generate a new token by going to [this settings
+page](https://github.com/settings/applications) for the username you
+chose above and generating a new *Personal API Access Token*.
+
+##### callback_url
+
+This is the root URL that GitHub will post to when a new pull request is
+made on any of your repositories. For example, if I was to push a Dredd
+instance to Cloud Foundry with an application name of `dredd` then the
+URL that I would put here would be `dredd.cfapps.io`.
+
+##### callback_secret
+
+This is the secret that GitHub and Dredd uses to make sure that any
+requests sent to Dredd come from GitHub. You can choose any value for
+this string but make sure to keep it secret. I'd advise making it some
+nice random mess.
+
+##### allowed_usernames
+
+This is a explicit list of GitHub usernames that are allowed to create
+pull requests without being asked to sign a CLA.
+
+##### allowed_emails
+
+This is a explicit list of email addresses that are allowed to create
+pull requests without being asked to sign a CLA.
+
+##### allowed_domains
+
+This is a explicit list of email address domains that are allowed to
+create pull requests without being asked to sign a CLA. For example, if
+I want everyone with a `pivotallabs.com` email address to be whitelisted
+then adding that to this list will do so.
+
+##### repositories
+
+This is the list of GitHub repositories that Dredd will monitor for new
+pull requests. It will create the required hooks on startup for any
+repositories listed here. To stop listening for a particular repository
+then manually remove the hook from the list on GitHub. The items in this
+list are of the form `username/repository`.
 
 ## License
 
