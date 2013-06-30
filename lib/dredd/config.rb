@@ -39,6 +39,10 @@ module Dredd
       get('allowed_emails', [])
     end
 
+    def allowed_domains
+      get('allowed_domains', [])
+    end
+
     private
 
     def get(key, default = nil)

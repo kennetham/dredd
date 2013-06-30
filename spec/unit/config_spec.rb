@@ -35,6 +35,10 @@ describe Dredd::Config do
       it 'allows you to read the list of allowed emails' do
         expect(config.allowed_emails).to eq(%w(allowed-email@example.com))
       end
+
+      it 'allows you to read the list of allowed domains' do
+        expect(config.allowed_domains).to eq(%w(example.com))
+      end
     end
   end
 
@@ -63,6 +67,7 @@ describe Dredd::Config do
     it_behaves_like 'it has a key which is a durable array',
                     'allowed_usernames'
     it_behaves_like 'it has a key which is a durable array', 'allowed_emails'
+    it_behaves_like 'it has a key which is a durable array', 'allowed_domains'
   end
 
   describe 'reading from a file' do

@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 require 'hashie/mash'
-require 'dredd/filters/email_filter'
+require 'dredd/filters/domain_filter'
 
-describe Dredd::EmailFilter do
+describe Dredd::DomainFilter do
   let(:client) { double('GitHub Client') }
-  let(:filter) { described_class.new(client, allowed_emails) }
+  let(:filter) { described_class.new(client, allowed_domains) }
 
   let(:author) { 'xoebus' }
   let(:pull_request) { Dredd::PullRequest.new(1, 'xoebus/dredd', author) }
@@ -17,16 +17,16 @@ describe Dredd::EmailFilter do
       )
     end
 
-    context 'when the pull request email is in the allowed emails' do
-      let(:allowed_emails) { %w(xoebus@xoeb.us) }
+    context 'when the pull request domain is in the allowed domains' do
+      let(:allowed_domains) { %w(xoeb.us) }
 
       it 'is true' do
         expect(filter.filter?(pull_request)).to be_true
       end
     end
 
-    context 'when the pull request email is not in the allowed emails' do
-      let(:allowed_emails) { %w(random@xoeb.us) }
+    context 'when the pull request domain is not in the allowed domains' do
+      let(:allowed_domains) { %w(google.com) }
 
       it 'is false' do
         expect(filter.filter?(pull_request)).to be_false

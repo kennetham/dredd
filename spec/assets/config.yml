@@ -11,6 +11,9 @@ allowed_usernames:
 allowed_emails:
   - allowed-email@example.com
 
+allowed_domains:
+  - example.com
+
 repositories:
   - username/repository
   - username/other-repository

@@ -23,6 +23,7 @@ describe 'dredd application lifecycle' do
   end
 
   let(:allowed_usernames) { [] }
+  let(:allowed_domains) { [] }
   let(:allowed_emails) { [] }
 
   let(:config_hash) do
@@ -35,6 +36,7 @@ describe 'dredd application lifecycle' do
         'callback_secret' => 'asdfasdfasdf',
         'allowed_usernames' => allowed_usernames,
         'allowed_emails' => allowed_emails,
+        'allowed_domains' => allowed_domains,
         'repositories' => %w(username/repository 'username/other-repository')
     }
   end
@@ -43,7 +45,8 @@ describe 'dredd application lifecycle' do
   let(:filter) do
     Dredd::CompositeFilter.new([
         Dredd::UsernameFilter.new(config.allowed_usernames),
-        Dredd::EmailFilter.new(github_client, config.allowed_emails)
+        Dredd::EmailFilter.new(github_client, config.allowed_emails),
+        Dredd::DomainFilter.new(github_client, config.allowed_domains)
     ])
   end
   let(:filtered_commenter) { Dredd::FilteredCommenter.new(commenter, filter) }
@@ -120,8 +123,28 @@ describe 'dredd application lifecycle' do
         end
       end
 
-      context 'when the user is not in the allowed usernames' do
+      context 'when the user email is not in the allowed emails' do
         let(:allowed_emails) { %w(random@xoeb.us) }
+
+        it 'makes a comment' do
+          github_calls_callback
+          assert_comment_was_made
+        end
+      end
+    end
+
+    describe 'allowed domains' do
+      context 'when the user email domain is in the allowed domains' do
+        let(:allowed_domains) { %w(xoeb.us) }
+
+        it 'does not make a comment' do
+          github_calls_callback
+          assert_comment_was_not_made
+        end
+      end
+
+      context 'when the user email domain is not in the allowed domains' do
+        let(:allowed_domains) { %w(google.com) }
 
         it 'makes a comment' do
           github_calls_callback

@@ -18,7 +18,8 @@ end
 
 composite_filter = Dredd::CompositeFilter.new([
     Dredd::EmailFilter.new(github_client, config.allowed_emails),
-    Dredd::UsernameFilter.new(config.allowed_usernames)
+    Dredd::UsernameFilter.new(config.allowed_usernames),
+    Dredd::DomainFilter.new(github_client, config.allowed_domains)
 ])
 
 commenter = Dredd::PullRequestCommenter.new(github_client, template)
