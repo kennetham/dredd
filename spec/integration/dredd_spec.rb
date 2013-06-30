@@ -75,7 +75,7 @@ describe 'dredd application lifecycle' do
     stub_request(
         :post,
         'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
-    )
+    ).to_return(status: 201, body: '', headers: {})
     assert_requested(
         :post,
         'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
