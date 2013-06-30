@@ -72,14 +72,17 @@ describe 'dredd application lifecycle' do
   end
 
   def assert_comment_was_made
-    stub_request(
-        :post,
-        'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
-    ).to_return(status: 201, body: '', headers: {})
     assert_requested(
         :post,
         'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
     )
+  end
+
+  def stub_comment_creation
+    stub_request(
+        :post,
+        'https://api.github.com/repos/xoebus/dredd/issues/10/comments'
+    ).to_return(status: 201, body: '', headers: {})
   end
 
   def stub_email_fetching
@@ -95,6 +98,7 @@ describe 'dredd application lifecycle' do
       app.set :secret, secret
 
       stub_email_fetching
+      stub_comment_creation
     end
 
     describe 'allowed usernames' do
