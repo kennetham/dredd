@@ -1,3 +1,4 @@
+require 'dredd/version'
 require 'dredd/config'
 require 'dredd/pull_request'
 
