@@ -3,8 +3,8 @@ require 'dredd/filters/composite_filter'
 require 'dredd/pull_request'
 
 describe Dredd::CompositeFilter do
-  let(:false_filter) { stub(filter?: false) }
-  let(:true_filter) { stub(filter?: true) }
+  let(:false_filter) { double(filter?: false) }
+  let(:true_filter) { double(filter?: true) }
 
   let(:filter) { described_class.new(filters) }
 
