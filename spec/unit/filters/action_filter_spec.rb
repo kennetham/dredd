@@ -10,7 +10,9 @@ describe Dredd::ActionFilter do
   let(:pull_request_action) { 'opened' }
 
   let(:author) { 'xoebus' }
-  let(:pull_request) { Dredd::PullRequest.new(1, 'xoebus/dredd', author, pull_request_action) }
+  let(:pull_request) do
+    Dredd::PullRequest.new(1, 'xoebus/dredd', author, pull_request_action)
+  end
 
   describe '#filter?' do
     context 'when enabled actions list is empty' do

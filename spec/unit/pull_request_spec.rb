@@ -7,9 +7,9 @@ require 'dredd/pull_request'
 describe Dredd::PullRequest do
   describe 'constructor' do
     it 'allows the setting of basic attributes' do
-      pull_request = described_class.new(10, 'xoebus/dredd', 'xoebus', 'opened')
+      pull_request = described_class.new(1, 'xoebus/dredd', 'xoebus', 'opened')
 
-      expect(pull_request.id).to eq 10
+      expect(pull_request.id).to eq 1
       expect(pull_request.repository).to eq 'xoebus/dredd'
       expect(pull_request.author).to eq 'xoebus'
       expect(pull_request.action).to eq 'opened'
