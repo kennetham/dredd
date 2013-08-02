@@ -43,6 +43,10 @@ module Dredd
       get('allowed_domains', [])
     end
 
+    def enabled_actions
+      get('enabled_actions', [])
+    end
+
     private
 
     def get(key, default = nil)
