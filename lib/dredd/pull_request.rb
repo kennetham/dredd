@@ -6,9 +6,10 @@ module Dredd
     attr_reader :action
 
     def self.from_hash(hash)
-      repository = hash.fetch('pull_request').fetch('base').fetch('repo').fetch('full_name')
-      id = hash.fetch('pull_request').fetch('number')
-      author = hash.fetch('pull_request').fetch('user').fetch('login')
+      pull_request = hash.fetch('pull_request')
+      repository = pull_request.fetch('base').fetch('repo').fetch('full_name')
+      id = pull_request.fetch('number')
+      author = pull_request.fetch('user').fetch('login')
       action = hash.fetch('action')
 
       new(id, repository, author, action)

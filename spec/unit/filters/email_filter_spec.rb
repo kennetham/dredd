@@ -8,7 +8,9 @@ describe Dredd::EmailFilter do
   let(:filter) { described_class.new(client, allowed_emails) }
 
   let(:author) { 'xoebus' }
-  let(:pull_request) { Dredd::PullRequest.new(1, 'xoebus/dredd', author, 'opened') }
+  let(:pull_request) do
+    Dredd::PullRequest.new(1, 'xoebus/dredd', author, 'opened')
+  end
 
   describe '#filter?' do
     before do

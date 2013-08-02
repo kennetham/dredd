@@ -8,7 +8,9 @@ describe Dredd::DomainFilter do
   let(:filter) { described_class.new(client, allowed_domains) }
 
   let(:author) { 'xoebus' }
-  let(:pull_request) { Dredd::PullRequest.new(1, 'xoebus/dredd', author, 'opened') }
+  let(:pull_request) do
+    Dredd::PullRequest.new(1, 'xoebus/dredd', author, 'opened')
+  end
 
   describe '#filter?' do
     before do

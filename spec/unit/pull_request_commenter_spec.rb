@@ -11,7 +11,9 @@ describe Dredd::PullRequestCommenter do
   let(:username) { 'seadowg' }
   let(:action) { 'opened' }
 
-  let(:pull_request) { Dredd::PullRequest.new(id, repository, username, action) }
+  let(:pull_request) do
+    Dredd::PullRequest.new(id, repository, username, action)
+  end
 
   describe 'making a comment' do
     it 'makes a comment with a template' do

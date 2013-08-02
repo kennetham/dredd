@@ -174,7 +174,7 @@ describe 'dredd application lifecycle' do
         end
       end
 
-      context 'when pull request action is NOT in the list of enabled actions' do
+      context 'when pull request action is NOT in the enabled actions list' do
         let(:enabled_actions) { %w{reopened} }
 
         it 'does not make a comment' do

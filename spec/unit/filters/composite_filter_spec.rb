@@ -8,7 +8,9 @@ describe Dredd::CompositeFilter do
 
   let(:filter) { described_class.new(filters) }
 
-  let(:pull_request) { Dredd::PullRequest.new(1, 'xoebus/dredd', 'xoebus', 'opened') }
+  let(:pull_request) do
+    Dredd::PullRequest.new(1, 'xoebus/dredd', 'xoebus', 'opened')
+  end
 
   describe 'filter?' do
     let(:filters) { [false_filter, true_filter] }
