@@ -25,6 +25,7 @@ describe 'dredd application lifecycle' do
   let(:allowed_usernames) { [] }
   let(:allowed_domains) { [] }
   let(:allowed_emails) { [] }
+  let(:allowed_organizations) { [] }
   let(:enabled_actions) { [] }
 
   let(:config_hash) do
@@ -38,6 +39,7 @@ describe 'dredd application lifecycle' do
         'allowed_usernames' => allowed_usernames,
         'allowed_emails' => allowed_emails,
         'allowed_domains' => allowed_domains,
+        'allowed_organizations' => allowed_organizations,
         'enabled_actions' => enabled_actions,
         'repositories' => %w(username/repository 'username/other-repository')
     }
@@ -49,6 +51,8 @@ describe 'dredd application lifecycle' do
         Dredd::UsernameFilter.new(config.allowed_usernames),
         Dredd::EmailFilter.new(github_client, config.allowed_emails),
         Dredd::DomainFilter.new(github_client, config.allowed_domains),
+        Dredd::OrganizationFilter.new(github_client,
+                                      config.allowed_organizations),
         Dredd::ActionFilter.new(github_client, config.enabled_actions)
     ])
   end
@@ -58,6 +62,7 @@ describe 'dredd application lifecycle' do
   let(:payload) { asset_contents('pull_request_opened.json') }
   let(:digest) { OpenSSL::Digest::Digest.new('sha1') }
   let(:hmac) { OpenSSL::HMAC.hexdigest(digest, secret, payload) }
+  let(:organizations_url) { 'https://api.github.com/users/xoebus/orgs' }
 
   def app
     Dredd::DreddApp
@@ -90,8 +95,16 @@ describe 'dredd application lifecycle' do
 
   def stub_email_fetching
     stub_request(:get, 'https://api.github.com/users/xoebus').to_return(
-        body: JSON.dump(email: 'xoebus@xoeb.us'),
+        body: JSON.dump(email: 'xoebus@xoeb.us',
+                        organizations_url: organizations_url),
         headers: { 'Content-Type' => 'application/json' }
+    )
+  end
+
+  def stub_organizations_fetching
+    stub_request(:get, organizations_url).to_return(
+      body: JSON.dump([{ login: 'cloudfoundry' }, { login: 'pivotal' }]),
+      headers: { 'Content-Type' => 'application/json' }
     )
   end
 
@@ -102,6 +115,7 @@ describe 'dredd application lifecycle' do
 
       stub_email_fetching
       stub_comment_creation
+      stub_organizations_fetching
     end
 
     describe 'allowed usernames' do
@@ -185,6 +199,26 @@ describe 'dredd application lifecycle' do
 
       context 'when enabled actions is empty list' do
         let(:enabled_actions) { [] }
+
+        it 'makes a comment' do
+          github_calls_callback
+          assert_comment_was_made
+        end
+      end
+    end
+
+    describe 'allowed organizations' do
+      context 'when the user organization is in the allowed organizations' do
+        let(:allowed_organizations) { %w(cloudfoundry) }
+
+        it 'does not make a comment' do
+          github_calls_callback
+          assert_comment_was_not_made
+        end
+      end
+
+      context 'when the user org is not in the allowed organizations' do
+        let(:allowed_emails) { %w(google) }
 
         it 'makes a comment' do
           github_calls_callback

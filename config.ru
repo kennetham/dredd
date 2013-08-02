@@ -20,6 +20,7 @@ composite_filter = Dredd::CompositeFilter.new([
     Dredd::EmailFilter.new(github_client, config.allowed_emails),
     Dredd::UsernameFilter.new(config.allowed_usernames),
     Dredd::DomainFilter.new(github_client, config.allowed_domains),
+    Dredd::OrganizationFilter.new(github_client, config.allowed_organizations),
     Dredd::ActionFilter.new(github_client, config.enabled_actions)
 ])
 

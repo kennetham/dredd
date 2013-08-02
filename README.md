@@ -79,6 +79,13 @@ create pull requests without being asked to sign a CLA. For example, if
 I want everyone with a `pivotallabs.com` email address to be whitelisted
 then adding that to this list will do so.
 
+##### allowed_organizations
+
+This is a explicit list of github organizations that are allowed to
+create pull requests without being asked to sign a CLA. For example, if
+I want everyone who is a member of the `cloudfoundry` organization to
+be whitelisted then adding that to this list will do so.
+
 ##### repositories
 
 This is the list of GitHub repositories that Dredd will monitor for new
