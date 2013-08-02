@@ -8,7 +8,7 @@ module Dredd
     end
 
     def filter?(pull_request)
-      @enabled_actions.empty? || @enabled_actions.include?(pull_request.action) ? false : true
+      ! (@enabled_actions.empty? || @enabled_actions.include?(pull_request.action))
     end
   end
 end
