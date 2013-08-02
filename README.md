@@ -87,6 +87,13 @@ repositories listed here. To stop listening for a particular repository
 then manually remove the hook from the list on GitHub. The items in this
 list are of the form `username/repository`.
 
+##### enabled_actions
+
+This is the list of pull request actions that will trigger
+Dredd to start comment on pull request. See the full list of actions for PullRequestEvent in
+[github API documentation](http://developer.github.com/v3/activity/events/types/#pullrequestevent).
+If the list is empty Dredd will monitor all pull request actions.
+
 ## License
 
     The MIT License (MIT)

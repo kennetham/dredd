@@ -17,8 +17,7 @@ module Dredd
     private
 
     def comment(json_hash)
-      pull_request_hash = json_hash.fetch('pull_request')
-      pull_request = PullRequest.from_hash(pull_request_hash)
+      pull_request = PullRequest.from_hash(json_hash)
       commenter.comment(pull_request)
     end
 

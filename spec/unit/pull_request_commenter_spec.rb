@@ -9,8 +9,9 @@ describe Dredd::PullRequestCommenter do
   let(:repository) { 'xoebus/test-repo' }
   let(:id) { 55 }
   let(:username) { 'seadowg' }
+  let(:action) { 'opened' }
 
-  let(:pull_request) { Dredd::PullRequest.new(id, repository, username) }
+  let(:pull_request) { Dredd::PullRequest.new(id, repository, username, action) }
 
   describe 'making a comment' do
     it 'makes a comment with a template' do

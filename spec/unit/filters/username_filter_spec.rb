@@ -6,7 +6,7 @@ describe Dredd::UsernameFilter do
   let(:filter) { described_class.new(allowed_usernames) }
 
   let(:author) { 'xoebus' }
-  let(:pull_request) { Dredd::PullRequest.new(1, 'xoebus/dredd', author) }
+  let(:pull_request) { Dredd::PullRequest.new(1, 'xoebus/dredd', author, 'opened') }
 
   describe '#filter?' do
     context 'when the pull request author is in the allowed usernames' do

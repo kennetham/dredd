@@ -4,6 +4,7 @@ require 'dredd/pull_request'
 
 require 'dredd/hook_bootstrapper'
 
+require 'dredd/filters/action_filter'
 require 'dredd/filters/composite_filter'
 require 'dredd/filters/email_filter'
 require 'dredd/filters/domain_filter'

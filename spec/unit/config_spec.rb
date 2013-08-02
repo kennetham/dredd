@@ -39,6 +39,10 @@ describe Dredd::Config do
       it 'allows you to read the list of allowed domains' do
         expect(config.allowed_domains).to eq(%w(example.com))
       end
+
+      it 'allows you to read the list of enabled actions' do
+        expect(config.enabled_actions).to eq(%w(opened))
+      end
     end
   end
 

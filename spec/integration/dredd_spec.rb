@@ -25,6 +25,7 @@ describe 'dredd application lifecycle' do
   let(:allowed_usernames) { [] }
   let(:allowed_domains) { [] }
   let(:allowed_emails) { [] }
+  let(:enabled_actions) { [] }
 
   let(:config_hash) do
     {
@@ -37,6 +38,7 @@ describe 'dredd application lifecycle' do
         'allowed_usernames' => allowed_usernames,
         'allowed_emails' => allowed_emails,
         'allowed_domains' => allowed_domains,
+        'enabled_actions' => enabled_actions,
         'repositories' => %w(username/repository 'username/other-repository')
     }
   end
@@ -46,7 +48,8 @@ describe 'dredd application lifecycle' do
     Dredd::CompositeFilter.new([
         Dredd::UsernameFilter.new(config.allowed_usernames),
         Dredd::EmailFilter.new(github_client, config.allowed_emails),
-        Dredd::DomainFilter.new(github_client, config.allowed_domains)
+        Dredd::DomainFilter.new(github_client, config.allowed_domains),
+        Dredd::ActionFilter.new(github_client, config.enabled_actions)
     ])
   end
   let(:filtered_commenter) { Dredd::FilteredCommenter.new(commenter, filter) }
@@ -153,6 +156,35 @@ describe 'dredd application lifecycle' do
 
       context 'when the user email domain is not in the allowed domains' do
         let(:allowed_domains) { %w(google.com) }
+
+        it 'makes a comment' do
+          github_calls_callback
+          assert_comment_was_made
+        end
+      end
+    end
+
+    describe 'enabled actions' do
+      context 'when pull request action is in the list of enabled actions' do
+        let(:enabled_actions) { %w{opened reopened} }
+
+        it 'makes a comment' do
+          github_calls_callback
+          assert_comment_was_made
+        end
+      end
+
+      context 'when pull request action is NOT in the list of enabled actions' do
+        let(:enabled_actions) { %w{reopened} }
+
+        it 'does not make a comment' do
+          github_calls_callback
+          assert_comment_was_not_made
+        end
+      end
+
+      context 'when enabled actions is empty list' do
+        let(:enabled_actions) { [] }
 
         it 'makes a comment' do
           github_calls_callback

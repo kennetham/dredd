@@ -14,6 +14,9 @@ allowed_emails:
 allowed_domains:
   - example.com
 
+enabled_actions:
+  - opened
+
 repositories:
   - username/repository
   - username/other-repository
