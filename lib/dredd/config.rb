@@ -43,6 +43,10 @@ module Dredd
       get('allowed_domains', [])
     end
 
+    def allowed_organizations
+      get('allowed_organizations', [])
+    end
+
     def enabled_actions
       get('enabled_actions', [])
     end
