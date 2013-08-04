@@ -128,5 +128,3 @@ If the list is empty Dredd will monitor all pull request actions.
     SOFTWARE.
 
 ---
-
-Photo Credit: [rutty](http://www.flickr.com/photos/rutty/498112451/)
