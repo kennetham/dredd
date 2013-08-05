@@ -1,13 +1,14 @@
 module Dredd
   class HookBootstrapper
-    def initialize(client, callback_url, callback_secret)
+    def initialize(client, callback_url, callback_secret, skip_bootstrap)
       @client = client
       @callback_url = callback_url
       @callback_secret = callback_secret
+      @skip_bootstrap = skip_bootstrap
     end
 
     def bootstrap_repository(repository)
-      return if hook_already_created?(repository)
+      return if @skip_bootstrap || hook_already_created?(repository)
       create_hook(repository)
     end
 

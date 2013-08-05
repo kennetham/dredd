@@ -5,8 +5,9 @@ require 'dredd/hook_bootstrapper'
 
 describe Dredd::HookBootstrapper do
   let(:client) { double('GitHub Client') }
+  let(:skip_bootstrap) { false }
   let(:bootstrapper) do
-    described_class.new(client, callback_url, callback_secret)
+    described_class.new(client, callback_url, callback_secret, skip_bootstrap)
   end
 
   let(:repository) { 'xoebus/test' }
@@ -40,6 +41,15 @@ describe Dredd::HookBootstrapper do
             { events: %w(pull_request), active: true }
         )
 
+        bootstrapper.bootstrap_repository(repository)
+      end
+    end
+
+    context 'when skip bootstrap is set' do
+      let(:skip_bootstrap) { true }
+
+      it 'does not create hooks' do
+        client.should_not_receive(:create_hook)
         bootstrapper.bootstrap_repository(repository)
       end
     end

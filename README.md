@@ -96,10 +96,16 @@ list are of the form `username/repository`.
 
 ##### enabled_actions
 
-This is the list of pull request actions that will trigger
-Dredd to start comment on pull request. See the full list of actions for PullRequestEvent in
-[github API documentation](http://developer.github.com/v3/activity/events/types/#pullrequestevent).
+This is the list of pull request actions that will trigger Dredd to
+start comment on pull request. See the full list of actions for
+PullRequestEvent in [github API documentation](http://developer.github.com/v3/activity/events/types/#pullrequestevent).
 If the list is empty Dredd will monitor all pull request actions.
+
+#### skip_bootstrap
+
+This is the flag that disables bootstrapping of github hooks. Set this
+as `true` if Dredd does not have admin access to the GitHub repo and
+hooks are already created.
 
 ## License
 

@@ -20,6 +20,8 @@ allowed_organizations:
 enabled_actions:
   - opened
 
+skip_bootstrap: false
+
 repositories:
   - username/repository
   - username/other-repository
