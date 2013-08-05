@@ -51,6 +51,10 @@ module Dredd
       get('enabled_actions', [])
     end
 
+    def skip_bootstrap
+      get('skip_bootstrap', false)
+    end
+
     private
 
     def get(key, default = nil)

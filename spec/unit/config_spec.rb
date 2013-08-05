@@ -40,8 +40,16 @@ describe Dredd::Config do
         expect(config.allowed_domains).to eq(%w(example.com))
       end
 
+      it 'allows you to read the list of allowed organizations' do
+        expect(config.allowed_organizations).to eq(%w(organization))
+      end
+
       it 'allows you to read the list of enabled actions' do
         expect(config.enabled_actions).to eq(%w(opened))
+      end
+
+      it 'allows you to read the skip bootstrap' do
+        expect(config.skip_bootstrap).to be_false
       end
     end
   end
