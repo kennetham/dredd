@@ -10,7 +10,7 @@ module Dredd
     def filter?(pull_request)
       username = pull_request.author
       organizations = organizations_for_user(username)
-      ! (organizations & @allowed_organizations).empty?
+      ! (organizations.map(&:downcase) & @allowed_organizations.map(&:downcase)).empty?
     end
 
     private
