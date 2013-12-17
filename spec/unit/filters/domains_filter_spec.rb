@@ -4,8 +4,9 @@ require 'hashie/mash'
 require 'dredd/filters/domain_filter'
 
 describe Dredd::DomainFilter do
-  let(:client) { double('GitHub Client') }
-  let(:filter) { described_class.new(client, allowed_domains) }
+  let(:client) { double('GitHub Client').as_null_object }
+  let(:logger) { double('Logger').as_null_object }
+  let(:filter) { described_class.new(client, logger, allowed_domains) }
 
   let(:author) { 'xoebus' }
   let(:pull_request) do
@@ -28,6 +29,13 @@ describe Dredd::DomainFilter do
         it 'is true' do
           expect(filter.filter?(pull_request)).to be_true
         end
+
+        it 'logs that the pull request is being filtered' do
+          logger.should_receive(:info)
+            .with("allow: domain 'xoeb.us' in allowed domains list")
+
+          filter.filter?(pull_request)
+        end
       end
 
       context 'when the pull request domain is not in the allowed domains' do
@@ -35,6 +43,13 @@ describe Dredd::DomainFilter do
 
         it 'is false' do
           expect(filter.filter?(pull_request)).to be_false
+        end
+
+        it 'logs that the pull request is not being filtered' do
+          logger.should_receive(:info)
+            .with("deny: domain 'xoeb.us' not in allowed domains list")
+
+          filter.filter?(pull_request)
         end
       end
     end

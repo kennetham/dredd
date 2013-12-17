@@ -4,11 +4,12 @@ require 'spec_helper'
 require 'dredd/hook_bootstrapper'
 
 describe Dredd::HookBootstrapper do
-  let(:client) { double('GitHub Client') }
-  let(:skip_bootstrap) { false }
+  let(:client) { double('GitHub Client').as_null_object }
+  let(:logger) { double('Logger').as_null_object }
   let(:callback) { Dredd::Callback.new(callback_url, callback_secret) }
+  let(:skip_bootstrap) { false }
   let(:bootstrapper) do
-    described_class.new(client, callback, skip_bootstrap)
+    described_class.new(client, logger, callback, skip_bootstrap)
   end
 
   let(:repository) { 'xoebus/test' }
@@ -42,6 +43,13 @@ describe Dredd::HookBootstrapper do
             events: %w(pull_request), active: true
         )
 
+        bootstrapper.bootstrap_repository(repository)
+      end
+
+      it 'logs the hook that it is creating' do
+        logger.should_receive(:info).with(
+          "creating dredd hook in repository 'xoebus/test'"
+        )
         bootstrapper.bootstrap_repository(repository)
       end
     end

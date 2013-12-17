@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'sinatra'
 gem 'octokit', '~> 1.25'
+gem 'logging'
 
 group :test do
   gem 'rspec'

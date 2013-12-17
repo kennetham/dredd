@@ -45,15 +45,18 @@ describe 'dredd application lifecycle' do
     }
   end
   let(:config) { Dredd::Config.new(config_hash) }
-  let(:commenter) { Dredd::PullRequestCommenter.new(github_client, template) }
+  let(:logger) { double('Logger').as_null_object }
+  let(:commenter) do
+    Dredd::PullRequestCommenter.new(github_client, logger, template)
+  end
   let(:filter) do
-    Dredd::CompositeFilter.new([
-        Dredd::UsernameFilter.new(config.allowed_usernames),
-        Dredd::EmailFilter.new(github_client, config.allowed_emails),
-        Dredd::DomainFilter.new(github_client, config.allowed_domains),
-        Dredd::OrganizationFilter.new(github_client,
+    Dredd::CompositeFilter.new(logger, [
+        Dredd::UsernameFilter.new(logger, config.allowed_usernames),
+        Dredd::EmailFilter.new(github_client, logger, config.allowed_emails),
+        Dredd::DomainFilter.new(github_client, logger, config.allowed_domains),
+        Dredd::OrganizationFilter.new(github_client, logger,
                                       config.allowed_organizations),
-        Dredd::ActionFilter.new(github_client, config.enabled_actions)
+        Dredd::ActionFilter.new(github_client, logger, config.enabled_actions)
     ])
   end
   let(:filtered_commenter) { Dredd::FilteredCommenter.new(commenter, filter) }

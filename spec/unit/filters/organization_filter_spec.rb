@@ -4,9 +4,10 @@ require 'hashie/mash'
 require 'dredd/filters/organization_filter'
 
 describe Dredd::OrganizationFilter do
-  let(:client) { double('GitHub Client') }
+  let(:client) { double('GitHub Client').as_null_object }
+  let(:logger) { double('Logger').as_null_object }
   let(:allowed_organizations) { [] }
-  let(:filter) { described_class.new(client, allowed_organizations) }
+  let(:filter) { described_class.new(client, logger, allowed_organizations) }
   let(:user_organizations) { [Hashie::Mash.new(login: 'cloudfoundry')] }
 
   let(:author) { 'xoebus' }
@@ -36,8 +37,16 @@ describe Dredd::OrganizationFilter do
     context 'when user has organizations' do
       context 'when user is member of an allowed organization' do
         let(:allowed_organizations) { %w{cloudfoundry pivotal} }
+
         it 'is true' do
           expect(filter.filter?(pull_request)).to be_true
+        end
+
+        it 'logs that the pull request is not being filtered' do
+          logger.should_receive(:info)
+          .with('allow: user orgs [cloudfoundry] in allowed orgs list')
+
+          filter.filter?(pull_request)
         end
 
         context 'but the organization is in a different case' do
@@ -48,6 +57,13 @@ describe Dredd::OrganizationFilter do
           it 'is true' do
             expect(filter.filter?(pull_request)).to be_true
           end
+
+          it 'logs that the pull request is being filtered' do
+            logger.should_receive(:info)
+              .with('allow: user orgs [cloudfoundry] in allowed orgs list')
+
+            filter.filter?(pull_request)
+          end
         end
       end
 
@@ -57,11 +73,19 @@ describe Dredd::OrganizationFilter do
         it 'is false' do
           expect(filter.filter?(pull_request)).to be_false
         end
+
+        it 'logs that the pull request is not being filtered' do
+          logger.should_receive(:info)
+            .with('deny: no user orgs [cloudfoundry] in allowed orgs list')
+
+          filter.filter?(pull_request)
+        end
       end
     end
 
     context 'when user has no organizations' do
       let(:user_organizations) { [] }
+
       it 'is false' do
         expect(filter.filter?(pull_request)).to be_false
       end

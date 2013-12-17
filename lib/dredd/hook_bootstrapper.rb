@@ -1,7 +1,8 @@
 module Dredd
   class HookBootstrapper
-    def initialize(client, callback, skip_bootstrap)
+    def initialize(client, logger, callback, skip_bootstrap)
       @client = client
+      @logger = logger
       @callback = callback
       @skip_bootstrap = skip_bootstrap
     end
@@ -14,6 +15,7 @@ module Dredd
     private
 
     def create_hook(repository)
+      @logger.info "creating dredd hook in repository '#{repository}'"
       @client.create_hook(
           repository, 'web',
           { url: @callback.url, secret: @callback.secret,
