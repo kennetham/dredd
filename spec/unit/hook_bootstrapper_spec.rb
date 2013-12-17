@@ -38,7 +38,7 @@ describe Dredd::HookBootstrapper do
             'web',
             { url: callback_url, secret: callback_secret,
               content_type: 'json' },
-            { events: %w(pull_request), active: true }
+            events: %w(pull_request), active: true
         )
 
         bootstrapper.bootstrap_repository(repository)

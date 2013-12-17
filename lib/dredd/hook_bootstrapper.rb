@@ -18,8 +18,8 @@ module Dredd
       @client.create_hook(
           repository, 'web',
           { url: @callback_url, secret: @callback_secret,
-              content_type: 'json' },
-          { events: %w(pull_request), active: true }
+            content_type: 'json' },
+          events: %w(pull_request), active: true
       )
     end
 
