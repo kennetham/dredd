@@ -10,9 +10,9 @@ github_client = Octokit::Client.new(login: config.username,
     oauth_token: config.token)
 
 
+callback = Dredd::Callback.new(config.callback_url, config.callback_secret)
 bootstrapper = Dredd::HookBootstrapper.new(github_client,
-                                           config.callback_url,
-                                           config.callback_secret,
+                                           callback,
                                            config.skip_bootstrap)
 config.repositories.each do |repo|
   bootstrapper.bootstrap_repository(repo)

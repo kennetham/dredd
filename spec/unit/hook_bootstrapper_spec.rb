@@ -6,8 +6,9 @@ require 'dredd/hook_bootstrapper'
 describe Dredd::HookBootstrapper do
   let(:client) { double('GitHub Client') }
   let(:skip_bootstrap) { false }
+  let(:callback) { Dredd::Callback.new(callback_url, callback_secret) }
   let(:bootstrapper) do
-    described_class.new(client, callback_url, callback_secret, skip_bootstrap)
+    described_class.new(client, callback, skip_bootstrap)
   end
 
   let(:repository) { 'xoebus/test' }

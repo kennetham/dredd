@@ -2,6 +2,7 @@ require 'dredd/version'
 require 'dredd/config'
 require 'dredd/pull_request'
 
+require 'dredd/callback'
 require 'dredd/hook_bootstrapper'
 
 require 'dredd/filters/action_filter'
