@@ -41,7 +41,9 @@ describe Dredd::OrganizationFilter do
         end
 
         context 'but the organization is in a different case' do
-          let(:user_organizations) { [Hashie::Mash.new(login: 'CloudFoundry')] }
+          let(:user_organizations) do
+            [Hashie::Mash.new(login: 'CloudFoundry')]
+          end
 
           it 'is true' do
             expect(filter.filter?(pull_request)).to be_true

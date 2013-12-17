@@ -10,16 +10,22 @@ module Dredd
     def filter?(pull_request)
       username = pull_request.author
       organizations = organizations_for_user(username)
-      ! (organizations.map(&:downcase) & @allowed_organizations.map(&:downcase)).empty?
+      ! (organizations & allowed_organizations).empty?
     end
 
     private
+
+    def allowed_organizations
+      @allowed_organizations.map(&:downcase)
+    end
 
     def organizations_for_user(username)
       user = @client.user(username)
       return [] unless user.organizations_url
 
-      @client.get(user.organizations_url).map(&:login)
+      @client.get(user.organizations_url)
+        .map(&:login)
+        .map(&:downcase)
     end
   end
 end
