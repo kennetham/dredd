@@ -32,9 +32,11 @@ module Dredd
         @username = username
       end
 
+      # rubocop:disable AccessorMethodName
       def get_binding
         binding
       end
+      # rubocop:enable AccessorMethodName
     end
   end
 end
