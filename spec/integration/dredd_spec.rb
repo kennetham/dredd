@@ -50,13 +50,15 @@ describe 'dredd application lifecycle' do
   let(:commenter) do
     Dredd::PullRequestCommenter.new(github_client, logger)
   end
+  let(:action_whitelist) do
+    Dredd::ActionWhitelist.new(github_client, logger, config.enabled_actions)
+  end
   let(:whitelist) do
     Dredd::CompositeWhitelist.new(logger, [
         Dredd::UsernameWhitelist.new(logger, config.allowed_usernames),
         Dredd::EmailWhitelist.new(github_client, logger, config.allowed_emails),
         Dredd::DomainWhitelist.new(github_client, logger, config.allowed_domains),
-        Dredd::OrganizationWhitelist.new(github_client, logger, config.allowed_organizations),
-        Dredd::ActionWhitelist.new(github_client, logger, config.enabled_actions)
+        Dredd::OrganizationWhitelist.new(github_client, logger, config.allowed_organizations)
     ])
   end
   let(:templates) do
@@ -65,7 +67,9 @@ describe 'dredd application lifecycle' do
       non_whitelisted_template: config.non_whitelisted_template
     }
   end
-  let(:whitelisted_commenter) { Dredd::WhitelistedCommenter.new(commenter, whitelist, templates) }
+  let(:whitelisted_commenter) do
+    Dredd::WhitelistedCommenter.new(commenter, action_whitelist, whitelist, templates)
+  end
 
   let(:secret) { config.callback_secret }
   let(:payload) { asset_contents('pull_request_opened.json') }

@@ -17,8 +17,8 @@ describe Dredd::ActionWhitelist do
 
   describe '#whitelisted?' do
     context 'when enabled actions list is empty' do
-      it 'is false on any action' do
-        expect(whitelist.whitelisted?(pull_request)).to be_false
+      it 'is true' do
+        expect(whitelist.whitelisted?(pull_request)).to be_true
       end
     end
 
@@ -28,13 +28,13 @@ describe Dredd::ActionWhitelist do
       context 'when action is not in the list' do
         let(:pull_request_action) { 'closed' }
 
-        it 'is true' do
-          expect(whitelist.whitelisted?(pull_request)).to be_true
+        it 'is false' do
+          expect(whitelist.whitelisted?(pull_request)).to be_false
         end
 
-        it 'logs that the pull request is being whitelisted' do
+        it 'logs that the pull request is not being whitelisted' do
           logger.should_receive(:info)
-            .with("allow: action 'closed' not in enabled actions list")
+            .with("deny: action 'closed' is not in enabled actions list")
 
           whitelist.whitelisted?(pull_request)
         end
@@ -43,13 +43,13 @@ describe Dredd::ActionWhitelist do
       context 'when action is in the list' do
         let(:pull_request_action) { 'opened' }
 
-        it 'is false' do
-          expect(whitelist.whitelisted?(pull_request)).to be_false
+        it 'is true' do
+          expect(whitelist.whitelisted?(pull_request)).to be_true
         end
 
-        it 'logs that the pull request is not being whitelisted' do
+        it 'logs that the pull request is being whitelisted' do
           logger.should_receive(:info)
-            .with("deny: action 'opened' in enabled actions list")
+            .with("allow: action 'opened' is in enabled actions list")
 
           whitelist.whitelisted?(pull_request)
         end

@@ -24,12 +24,12 @@ config.repositories.each do |repo|
   bootstrapper.bootstrap_repository(repo)
 end
 
+action_whitelist = Dredd::ActionWhitelist.new(github_client, logger, config.enabled_actions)
 composite_whitelist = Dredd::CompositeWhitelist.new(logger, [
     Dredd::EmailWhitelist.new(github_client, logger, config.allowed_emails),
     Dredd::UsernameWhitelist.new(logger, config.allowed_usernames),
     Dredd::DomainWhitelist.new(github_client, logger, config.allowed_domains),
     Dredd::OrganizationWhitelist.new(github_client, logger, config.allowed_organizations),
-    Dredd::ActionWhitelist.new(github_client, logger, config.enabled_actions)
 ])
 
 commenter = Dredd::PullRequestCommenter.new(github_client, logger)
@@ -37,7 +37,7 @@ templates = {
   whitelisted_template: config.whitelisted_template,
   non_whitelisted_template: config.non_whitelisted_template,
 }
-whitelisted_commenter = Dredd::WhitelistedCommenter.new(commenter, composite_whitelist, templates)
+whitelisted_commenter = Dredd::WhitelistedCommenter.new(commenter, action_whitelist, composite_whitelist, templates)
 
 Dredd::DreddApp.set :commenter, whitelisted_commenter
 Dredd::DreddApp.set :secret, config.callback_secret

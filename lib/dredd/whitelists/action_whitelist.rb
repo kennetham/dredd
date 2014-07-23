@@ -10,13 +10,12 @@ module Dredd
 
     def whitelisted?(pull_request)
       action = pull_request.action
-      whitelisted = ! (@enabled_actions.empty? ||
-         @enabled_actions.include?(action))
+      whitelisted = @enabled_actions.empty? || @enabled_actions.include?(action)
 
       if whitelisted
-        @logger.info "allow: action '#{action}' not in enabled actions list"
+        @logger.info "allow: action '#{action}' is in enabled actions list"
       else
-        @logger.info "deny: action '#{action}' in enabled actions list"
+        @logger.info "deny: action '#{action}' is not in enabled actions list"
       end
 
       whitelisted
