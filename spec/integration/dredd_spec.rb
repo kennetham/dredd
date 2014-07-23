@@ -14,7 +14,6 @@ describe 'dredd application lifecycle' do
     WebMock.allow_net_connect!
   end
 
-  let(:template) { File.read('config/template.md.erb') }
   let(:github_client) do
     Octokit::Client.new(
         login: config.username,
@@ -41,25 +40,36 @@ describe 'dredd application lifecycle' do
         'allowed_domains' => allowed_domains,
         'allowed_organizations' => allowed_organizations,
         'enabled_actions' => enabled_actions,
-        'repositories' => %w(username/repository 'username/other-repository')
+        'repositories' => %w(username/repository 'username/other-repository'),
+        'whitelisted_template' => 'whitelisted_template.md',
+        'non_whitelisted_template' => 'non_whitelisted_template.md'
     }
   end
   let(:config) { Dredd::Config.new(config_hash) }
   let(:logger) { double('Logger').as_null_object }
   let(:commenter) do
-    Dredd::PullRequestCommenter.new(github_client, logger, template)
+    Dredd::PullRequestCommenter.new(github_client, logger)
   end
-  let(:filter) do
-    Dredd::CompositeFilter.new(logger, [
-        Dredd::UsernameFilter.new(logger, config.allowed_usernames),
-        Dredd::EmailFilter.new(github_client, logger, config.allowed_emails),
-        Dredd::DomainFilter.new(github_client, logger, config.allowed_domains),
-        Dredd::OrganizationFilter.new(github_client, logger,
-                                      config.allowed_organizations),
-        Dredd::ActionFilter.new(github_client, logger, config.enabled_actions)
+  let(:action_whitelist) do
+    Dredd::ActionWhitelist.new(github_client, logger, config.enabled_actions)
+  end
+  let(:whitelist) do
+    Dredd::CompositeWhitelist.new(logger, [
+        Dredd::UsernameWhitelist.new(logger, config.allowed_usernames),
+        Dredd::EmailWhitelist.new(github_client, logger, config.allowed_emails),
+        Dredd::DomainWhitelist.new(github_client, logger, config.allowed_domains),
+        Dredd::OrganizationWhitelist.new(github_client, logger, config.allowed_organizations)
     ])
   end
-  let(:filtered_commenter) { Dredd::FilteredCommenter.new(commenter, filter) }
+  let(:templates) do
+    {
+      whitelisted_template: nil,
+      non_whitelisted_template: config.non_whitelisted_template
+    }
+  end
+  let(:whitelisted_commenter) do
+    Dredd::WhitelistedCommenter.new(commenter, action_whitelist, whitelist, templates)
+  end
 
   let(:secret) { config.callback_secret }
   let(:payload) { asset_contents('pull_request_opened.json') }
@@ -98,8 +108,7 @@ describe 'dredd application lifecycle' do
 
   def stub_email_fetching
     stub_request(:get, 'https://api.github.com/users/xoebus').to_return(
-        body: JSON.dump(email: 'xoebus@xoeb.us',
-                        organizations_url: organizations_url),
+        body: JSON.dump(email: 'xoebus@xoeb.us', organizations_url: organizations_url),
         headers: { 'Content-Type' => 'application/json' }
     )
   end
@@ -113,7 +122,7 @@ describe 'dredd application lifecycle' do
 
   describe 'commenting on pull requests' do
     before do
-      app.set :commenter, filtered_commenter
+      app.set :commenter, whitelisted_commenter
       app.set :secret, secret
 
       stub_email_fetching

@@ -5,7 +5,6 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'dredd'
 
 config = Dredd::Config.from_file('config/config.yml')
-template = File.read('config/template.md.erb')
 
 github_client = Octokit::Client.new(login: config.username,
     oauth_token: config.token)
@@ -25,18 +24,22 @@ config.repositories.each do |repo|
   bootstrapper.bootstrap_repository(repo)
 end
 
-composite_filter = Dredd::CompositeFilter.new(logger, [
-    Dredd::EmailFilter.new(github_client, logger, config.allowed_emails),
-    Dredd::UsernameFilter.new(logger, config.allowed_usernames),
-    Dredd::DomainFilter.new(github_client, logger, config.allowed_domains),
-    Dredd::OrganizationFilter.new(github_client, logger, config.allowed_organizations),
-    Dredd::ActionFilter.new(github_client, logger, config.enabled_actions)
+action_whitelist = Dredd::ActionWhitelist.new(github_client, logger, config.enabled_actions)
+composite_whitelist = Dredd::CompositeWhitelist.new(logger, [
+    Dredd::EmailWhitelist.new(github_client, logger, config.allowed_emails),
+    Dredd::UsernameWhitelist.new(logger, config.allowed_usernames),
+    Dredd::DomainWhitelist.new(github_client, logger, config.allowed_domains),
+    Dredd::OrganizationWhitelist.new(github_client, logger, config.allowed_organizations),
 ])
 
-commenter = Dredd::PullRequestCommenter.new(github_client, logger, template)
-filtered_commenter = Dredd::FilteredCommenter.new(commenter, composite_filter)
+commenter = Dredd::PullRequestCommenter.new(github_client, logger)
+templates = {
+  whitelisted_template: config.whitelisted_template,
+  non_whitelisted_template: config.non_whitelisted_template,
+}
+whitelisted_commenter = Dredd::WhitelistedCommenter.new(commenter, action_whitelist, composite_whitelist, templates)
 
-Dredd::DreddApp.set :commenter, filtered_commenter
+Dredd::DreddApp.set :commenter, whitelisted_commenter
 Dredd::DreddApp.set :secret, config.callback_secret
 
 run Dredd::DreddApp

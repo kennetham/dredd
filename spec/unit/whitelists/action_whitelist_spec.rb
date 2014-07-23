@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 require 'hashie/mash'
-require 'dredd/filters/action_filter'
+require 'dredd/whitelists/action_whitelist'
 
-describe Dredd::ActionFilter do
+describe Dredd::ActionWhitelist do
   let(:client) { double('GitHub Client').as_null_object }
   let(:logger) { double('Logger').as_null_object }
   let(:enabled_actions) { [] }
-  let(:filter) { described_class.new(client, logger, enabled_actions) }
+  let(:whitelist) { described_class.new(client, logger, enabled_actions) }
   let(:pull_request_action) { 'opened' }
 
   let(:author) { 'xoebus' }
@@ -15,10 +15,10 @@ describe Dredd::ActionFilter do
     Dredd::PullRequest.new(1, 'xoebus/dredd', author, pull_request_action)
   end
 
-  describe '#filter?' do
+  describe '#whitelisted?' do
     context 'when enabled actions list is empty' do
-      it 'is false on any action' do
-        expect(filter.filter?(pull_request)).to be_false
+      it 'is true' do
+        expect(whitelist.whitelisted?(pull_request)).to be_true
       end
     end
 
@@ -28,30 +28,30 @@ describe Dredd::ActionFilter do
       context 'when action is not in the list' do
         let(:pull_request_action) { 'closed' }
 
-        it 'is true' do
-          expect(filter.filter?(pull_request)).to be_true
+        it 'is false' do
+          expect(whitelist.whitelisted?(pull_request)).to be_false
         end
 
-        it 'logs that the pull request is being filtered' do
+        it 'logs that the pull request is not being whitelisted' do
           logger.should_receive(:info)
-            .with("allow: action 'closed' not in enabled actions list")
+            .with("deny: action 'closed' is not in enabled actions list")
 
-          filter.filter?(pull_request)
+          whitelist.whitelisted?(pull_request)
         end
       end
 
       context 'when action is in the list' do
         let(:pull_request_action) { 'opened' }
 
-        it 'is false' do
-          expect(filter.filter?(pull_request)).to be_false
+        it 'is true' do
+          expect(whitelist.whitelisted?(pull_request)).to be_true
         end
 
-        it 'logs that the pull request is not being filtered' do
+        it 'logs that the pull request is being whitelisted' do
           logger.should_receive(:info)
-            .with("deny: action 'opened' in enabled actions list")
+            .with("allow: action 'opened' is in enabled actions list")
 
-          filter.filter?(pull_request)
+          whitelist.whitelisted?(pull_request)
         end
       end
     end

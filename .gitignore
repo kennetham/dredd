@@ -21,4 +21,4 @@ doc/
 .idea/
 
 # Project Specific
-config/config.yml
+config/*[!example]*
