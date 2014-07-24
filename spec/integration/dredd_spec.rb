@@ -41,9 +41,14 @@ describe 'dredd application lifecycle' do
         'allowed_organizations' => allowed_organizations,
         'enabled_actions' => enabled_actions,
         'repositories' => %w(username/repository 'username/other-repository'),
-        'whitelisted_template' => 'whitelisted_template.md',
-        'non_whitelisted_template' => 'non_whitelisted_template.md'
+        'non_whitelisted_template' => non_whitelisted_template.path
     }
+  end
+  let(:non_whitelisted_template) do
+    file = Tempfile.new('template')
+    file.write('hello <%= username %>')
+    file.flush
+    file
   end
   let(:config) { Dredd::Config.new(config_hash) }
   let(:logger) { double('Logger').as_null_object }

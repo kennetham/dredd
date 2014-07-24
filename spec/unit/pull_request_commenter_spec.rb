@@ -4,7 +4,12 @@ require 'dredd/pull_request_commenter'
 describe Dredd::PullRequestCommenter do
   let(:client) { double('GitHub Client').as_null_object }
   let(:logger) { double('Logger').as_null_object }
-  let(:template) { 'hello <%= username %>' }
+  let(:template) do
+    file = Tempfile.new('template')
+    file.write('hello <%= username %>')
+    file.flush
+    file
+  end
   let(:commenter) { described_class.new(client, logger) }
 
   let(:repository) { 'xoebus/test-repo' }
