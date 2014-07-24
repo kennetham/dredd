@@ -13,7 +13,7 @@ module Dredd
       repository = pull_request.repository
 
       @logger.info("commenting on #{repository}##{id}")
-      comment_text = render_comment(username, ERB.new(template))
+      comment_text = render_comment(username, ERB.new(File.read(template)))
       @client.add_comment(repository, id, comment_text)
     end
 
