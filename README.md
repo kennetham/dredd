@@ -1,4 +1,4 @@
-# Dredd [![Code Climate](https://codeclimate.com/github/xoebus/dredd.png)](https://codeclimate.com/github/xoebus/dredd) [![Build Status](https://travis-ci.org/xoebus/dredd.png)](https://travis-ci.org/xoebus/dredd) [![Coverage Status](https://coveralls.io/repos/xoebus/dredd/badge.png)](https://coveralls.io/r/xoebus/dredd) [![Dependency Status](https://gemnasium.com/xoebus/dredd.png)](https://gemnasium.com/xoebus/dredd)
+# dredd [![Code Climate](https://codeclimate.com/github/xoebus/dredd.png)](https://codeclimate.com/github/xoebus/dredd) [![Build Status](https://travis-ci.org/xoebus/dredd.png)](https://travis-ci.org/xoebus/dredd) [![Coverage Status](https://coveralls.io/repos/xoebus/dredd/badge.png)](https://coveralls.io/r/xoebus/dredd) [![Dependency Status](https://gemnasium.com/xoebus/dredd.png)](https://gemnasium.com/xoebus/dredd)
 
 
 *Contributor Licence Agreement Enforcer*
