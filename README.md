@@ -101,18 +101,18 @@ start comment on pull request. See the full list of actions for
 PullRequestEvent in [github API documentation](http://developer.github.com/v3/activity/events/types/#pullrequestevent).
 If the list is empty Dredd will monitor all pull request actions.
 
-#### skip_bootstrap
+##### skip_bootstrap
 
 This is the flag that disables bootstrapping of github hooks. Set this
 as `true` if Dredd does not have admin access to the GitHub repo and
 hooks are already created.
 
-#### non_whitelisted_template
+##### non_whitelisted_template
 
 This is the template Dredd will use to comment when the requester
 does not exist in any whitelist.
 
-#### whitelisted_template
+##### whitelisted_template
 
 This is the optional template Dredd will use to comment in the affirmative
 when the requester already exists in the whitelist.
